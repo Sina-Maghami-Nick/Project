@@ -1,0 +1,47 @@
+<html>
+<head>
+  <title>Project</title>
+  <script src="lib/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="lib/purl.js"></script>
+
+  <!-- include source files here... -->
+  <script type="text/javascript" src="src/OPS.js"></script>
+  <script type="text/javascript" src="src/ConceptWikiSearch.js"></script>
+
+  <!-- setup -->
+  <script type="text/javascript">
+var prmstr = window.location.search.substr(1);
+var prmarr = prmstr.split ("&");
+var params = {};
+
+for ( var i = 0; i < prmarr.length; i++) {
+    var tmparr = prmarr[i].split("=");
+    params[tmparr[0]] = tmparr[1];
+}
+  var app-id = "319894f5";
+  var app-key = "6992b9c544389ddda346cbb4cec5c6ec";
+  </script>
+
+</head>
+
+<body>
+<h2>Search Results</h2>
+  <p><div id="link"></div></p>
+  <h3>JSON reply</h3>
+  <p><div id="json">Nothing yet</div></p>
+  <script type="text/javascript">
+  html = "<link>";
+var searcher = new Openphacts.ConceptWikiSearch("https://beta.openphacts.org/1.4","319894f5", "6992b9c544389ddda346cbb4cec5c6ec");  
+var callback = function(success, status, response){
+  document.getElementById("json").innerHTML = "<pre>" + JSON.stringify(response, null, '  ') + "</pre>";
+  dataJSON = JSON.stringify(response);
+  data = JSON.parse(unescape(dataJSON));
+  document.getElementById("link").innerHTML = "<a href=\"" + data._about + "\">" + data._about + "</a>";
+  
+   
+};
+searcher.byTag(params ["search"], '1', '1', 'eda73945-b112-407e-811a-88448966834f', callback);
+  </script>
+</body>
+</html>
+
