@@ -24,22 +24,17 @@ var showDetails = function(dataJSON){
 };
   </script>
 
-  <script type="text/javascript">
-  var app-id = "319894f5";
-  var app-key = "6992b9c544389ddda346cbb4cec5c6ec";
-  </script>
-
 </head>
 
 <body>
   <h3>Link</h3>
   <p><div id="link">Nothing yet</div></p>
-  <h3>JSON reply</h3>
-  <p><div id="json">Nothing yet</div></p>
+  <!-- <h3>JSON reply</h3>
+  <p><div id="json">Nothing yet</div></p> -->
   <script type="text/javascript">
 var searcher = new Openphacts.ConceptWikiSearch("https://beta.openphacts.org/1.4","319894f5", "6992b9c544389ddda346cbb4cec5c6ec");  
 var callback = function(success, status, response){
-  document.getElementById("json").innerHTML = "<pre>" + JSON.stringify(response, null, '  ') + "</pre>";
+ // document.getElementById("json").innerHTML = "<pre>" + JSON.stringify(response, null, '  ') + "</pre>";
   dataJSON = JSON.stringify(response);
   data = JSON.parse(unescape(dataJSON));
   document.getElementById("link").innerHTML = "<a href=\"" + data._about + "\">" + data._about + "</a>";
