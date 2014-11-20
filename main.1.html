@@ -3,10 +3,23 @@
   <title>Project</title>
   <script src="lib/jquery-1.9.1.min.js"></script>
   <script type="text/javascript" src="lib/purl.js"></script>
+  <script type="text/javascript" src="lib/jasmine-1.3.1/jasmine.js"></script>
+  <script type="text/javascript" src="lib/jasmine-1.3.1/jasmine-html.js"></script>
 
   <!-- include source files here... -->
   <script type="text/javascript" src="src/OPS.js"></script>
   <script type="text/javascript" src="src/ConceptWikiSearch.js"></script>
+  <script type="text/javascript" src="src/CompoundSearch.js"></script>
+  <script type="text/javascript" src="src/TargetSearch.js"></script>
+  <script type="text/javascript" src="src/ConceptWikiSearch.js"></script>
+  <script type="text/javascript" src="src/StructureSearch.js"></script>
+  <script type="text/javascript" src="src/TreeSearch.js"></script>
+  <script type="text/javascript" src="src/ActivitySearch.js"></script>
+  <script type="text/javascript" src="src/PathwaySearch.js"></script>
+  <script type="text/javascript" src="src/MapSearch.js"></script>
+  <script type="text/javascript" src="src/DataSources.js"></script>
+  <script type="text/javascript" src="src/DiseaseSearch.js"></script>
+  <script type="text/javascript" src="src/Version.js"></script>  
 
   <!-- setup -->
   <script type="text/javascript">
@@ -18,28 +31,78 @@ for ( var i = 0; i < prmarr.length; i++) {
     var tmparr = prmarr[i].split("=");
     params[tmparr[0]] = tmparr[1];
 }
-var showDetails = function(dataJSON){
-    data = JSON.parse(unescape(dataJSON));
-    document.getElementById("details").innerHTML = "<a href=\"" + data._about + "\">" + data._about + "</a>";
-};
   </script>
 
 </head>
 
 <body>
+
+	<h3>Pathways reverse to targets</h3>
+  <p><div id="TargetsofPathway">Nothing yet</div></p>
+  <h3>Pathways</h3>
+  <p><div id="pathway">Nothing yet</div></p>
+  <h3>Target</h3>
+  <p><div id="target">Nothing yet</div></p>
   <h3>Link</h3>
   <p><div id="link">Nothing yet</div></p>
   <!-- <h3>JSON reply</h3>
   <p><div id="json">Nothing yet</div></p> -->
   <script type="text/javascript">
 var searcher = new Openphacts.ConceptWikiSearch("https://beta.openphacts.org/1.4","319894f5", "6992b9c544389ddda346cbb4cec5c6ec");  
-var callback = function(success, status, response){
- // document.getElementById("json").innerHTML = "<pre>" + JSON.stringify(response, null, '  ') + "</pre>";
+var diseaseUrl;
+var getDiseaseUrl = function(success, status, response){
+  //document.getElementById("link").innerHTML = "<pre>" + JSON.stringify(response, null, '  ') + "</pre>";
   dataJSON = JSON.stringify(response);
   data = JSON.parse(unescape(dataJSON));
-  document.getElementById("link").innerHTML = "<a href=\"" + data._about + "\">" + data._about + "</a>";
+  document.getElementById("link").innerHTML = "<a href=\"" + data.primaryTopic.result._about + "\">" + data.primaryTopic.result._about + "</a>";
+  diseaseUrl = data.primaryTopic.result._about;
+  var searcher = new Openphacts.DiseaseSearch("https://beta.openphacts.org/1.4","319894f5", "6992b9c544389ddda346cbb4cec5c6ec"); 
+  searcher.targetsByDisease(diseaseUrl, null, null, null, null, getTargets);
 };
-searcher.byTag(params ["search"], '1', '1', 'eda73945-b112-407e-811a-88448966834f', callback);
+searcher.byTag(params ['search'], '1', '1', 'eda73945-b112-407e-811a-88448966834f', getDiseaseUrl);
+
+
+
+var getTargets=function(success, status, response){
+	//document.getElementById("target").innerHTML = "<pre>" + JSON.stringify(response, null, '  ') + "</pre>";
+	dataJSON = JSON.stringify(response);
+	data = JSON.parse(unescape(dataJSON));
+	document.getElementById("target").innerHTML = "	";
+	var searcher = new Openphacts.PathwaySearch("https://beta.openphacts.org/1.3","319894f5", "6992b9c544389ddda346cbb4cec5c6ec"); 
+	for (var i=0; i<data.items.length; i++) {
+	  var name = data.items[i].seeAlso[1].prefLabel_en;
+	  if (name == undefined) 
+	  name = data.items[i].seeAlso[2].prefLabel_en;
+	  document.getElementById("target").innerHTML += "<br> <a href=\"" + data.items[i]._about + "\">" + name + "</a> </br>";
+	  searcher.byTarget(data.items[i]._about, null, null, null, null, null, getPathways);
+	}
+};
+
+var getPathways = function(success, status, response){
+//document.getElementById("pathway").innerHTML += "<pre>" + JSON.stringify(response, null, '  ') + "</pre>";
+dataJSON = JSON.stringify(response);
+data = JSON.parse(unescape(dataJSON));
+    document.getElementById("pathway").innerHTML = "	"; // This is for getting rid of the Nothing yet.
+	document.getElementById("pathway").innerHTML += "<br><b>" + data.items[0].hasPart.exactMatch.prefLabel_en + "</b></br>";
+	for (var i=0; i<data.items.length; i++) {
+	document.getElementById("pathway").innerHTML += "<br> <a href=\"" + data.items[i].identifier + "\">" + data.items[i].title_en +"</br>";
+	var searcher = new Openphacts.PathwaySearch("https://beta.openphacts.org/1.3","319894f5", "6992b9c544389ddda346cbb4cec5c6ec");
+	searcher.getTargets(data.items[i].identifier, null, getTargetsofPathways);
+	}
+}
+
+var getTargetsofPathways = function(success, status, response){
+	dataJSON = JSON.stringify(response);
+	data = JSON.parse(unescape(dataJSON));
+	//document.getElementById("TargetsofPathway").innerHTML += "<pre>" + JSON.stringify(response, null, '  ') + "</pre>";
+	document.getElementById("TargetsofPathway").innerHTML += "<br><b>" + data.primaryTopic.latest_version.title_en + "</b></br>";
+	for (var i=0; i<data.primaryTopic.latest_version.hasPart.length; i++) {
+	document.getElementById("TargetsofPathway").innerHTML += "<br> <a href=\"" + data.primaryTopic.latest_version.hasPart[i] + "\">" + data.primaryTopic.latest_version.hasPart[i] +"</br>";
+	}
+}
+	
+
+
   </script>
 </body>
 </html>
