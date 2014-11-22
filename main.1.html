@@ -82,7 +82,6 @@ var getPathways = function(success, status, response){
 //document.getElementById("pathway").innerHTML += "<pre>" + JSON.stringify(response, null, '  ') + "</pre>";
 dataJSON = JSON.stringify(response);
 data = JSON.parse(unescape(dataJSON));
-    document.getElementById("pathway").innerHTML = "	"; // This is for getting rid of the Nothing yet.
 	document.getElementById("pathway").innerHTML += "<br><b>" + data.items[0].hasPart.exactMatch.prefLabel_en + "</b></br>";
 	for (var i=0; i<data.items.length; i++) {
 	document.getElementById("pathway").innerHTML += "<br> <a href=\"" + data.items[i].identifier + "\">" + data.items[i].title_en +"</br>";
