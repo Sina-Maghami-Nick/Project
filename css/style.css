@@ -1,12 +1,4 @@
-<!-- This HTML file creates a search bar which the searched string will be used to a redirect url with the search in there after "?"-->
-<!DOCTYPE html>
-<html>
-<head>
-<title>Search Box Example 1</title>
-<meta name="ROBOTS" content="NOINDEX, NOFOLLOW" />
-<!-- CSS styles for standard search box -->
-<style type="text/css">
-	#tfheader{
+#tfheader{
 		background-color:#c2dfef;
 	}
 	#tfnewsearch{
@@ -52,15 +44,22 @@
 	.tfclear{
 		clear:both;
 	}
-</style>
-</head>
-<body>
-	<!-- HTML for SEARCH BAR -->
-	<div id="tfheader">
-		<form id="tfnewsearch" method="get" action="main.1.html">
-		        <input type="text" class="tftextinput" name="search" size="21" maxlength="120"><input type="submit" value="Search a Disease" class="tfbutton">
-		</form>
-	<div class="tfclear"></div>
-	</div>
-</body>
-</html>
+.node {
+  cursor: pointer;
+}
+
+.node circle {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.node text {
+  font: 10px sans-serif;
+}
+
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
