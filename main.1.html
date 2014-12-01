@@ -60,6 +60,7 @@ var jsonData = {};
   <script type="text/javascript">
 var searcher = new Openphacts.ConceptWikiSearch("https://beta.openphacts.org/1.4","319894f5", "6992b9c544389ddda346cbb4cec5c6ec");  
 var diseaseUrl;
+var treeMaker = 0;
 var getDiseaseUrl = function(success, status, response){
   //document.getElementById("link").innerHTML = "<pre>" + JSON.stringify(response, null, '  ') + "</pre>";
   dataJSON = JSON.stringify(response);
@@ -74,6 +75,7 @@ var getDiseaseUrl = function(success, status, response){
 
 
 var getTargets=function(success, status, response){
+if (status == 200) {
 	jsonData.children = [];
 	//document.getElementById("target").innerHTML = "<pre>" + JSON.stringify(response, null, '  ') + "</pre>";
 	dataJSON = JSON.stringify(response);
@@ -86,6 +88,7 @@ var getTargets=function(success, status, response){
 	  nameTarget = data.items[i].seeAlso[2].prefLabel_en;
 	  document.getElementById("target").innerHTML += "<br> <a href=\"" + data.items[i]._about + "\">" + nameTarget + "</a> </br>";
 	  searcher.byTarget(data.items[i]._about, null, null, null, null, null, getPathways);
+	}
 	}
 };
 
@@ -123,6 +126,7 @@ var getPathways = function(success, status, response){
 }
 
 var getTargetsofPathways = function(success, status, response){
+if (status == 200) {
 	dataJSON = JSON.stringify(response);
 	data = JSON.parse(unescape(dataJSON));
 	
@@ -145,8 +149,7 @@ var getTargetsofPathways = function(success, status, response){
 	searcher.diseasesByTarget(data.primaryTopic.latest_version.hasPart[i], null, null, null, null, diseaseFromTarget);
 	//document.getElementById("TargetsofPathway").innerHTML += "<br> <a href=\"" + data.primaryTopic.latest_version.hasPart[i] + "\">" + data.primaryTopic.latest_version.hasPart[i] +"</br>";
 	}
-	root = jsonData;
-	update(jsonData);
+	}
 }
 
 var diseaseFromTarget = function(success, status, response){
@@ -157,6 +160,11 @@ var diseaseFromTarget = function(success, status, response){
 //document.getElementById("TargetsofPathway").innerHTML += "<pre>" + JSON.stringify(response, null, '  ') + "</pre>";
 		dataJSON = JSON.stringify(response);
 		data = JSON.parse(unescape(dataJSON));
+		
+		//document.getElementById("TargetsofPathway").innerHTML += "<pre>" + JSON.stringify(response, null, '  ') + "</pre>";
+		//document.getElementById("TargetsofPathway").innerHTML += data.items[1].name;
+
+		
 		fatherLink = data.isPartOf._about.split("https://beta.openphacts.org/1.4/disease/byTarget?_format=json&app_key=6992b9c544389ddda346cbb4cec5c6ec&app_id=319894f5&uri=");
 		//document.getElementById("TargetsofPathway").innerHTML += "<br>" +fatherLink[1]+ "</br>"
 		var indexD = null;
@@ -171,17 +179,20 @@ var diseaseFromTarget = function(success, status, response){
 				break;
 			}
 	}
-	//console.log(indexD);
+	console.log(indexD);
 	jsonData.children[indexD].children = [];
+	
 		for (var i=0; i<data.items.length; i++) {
-			//jsonData.children[indexD].children.push({"name": data.itmes[i].name});
-			document.getElementById("TargetsofPathway").innerHTML += "<br>" + data.itmes[i].name + "</br>"
+			jsonData.children[indexD].children.push({"name": data.items[i].name});
+			//document.getElementById("TargetsofPathway").innerHTML += "<br>" + data.items[i].name + "</br>"
 		}
+		root = jsonData;
+		update(jsonData);
 	}
 }
-
 jsonData.name = params ['search'];	
 searcher.byTag(params ['search'], '1', '1', 'eda73945-b112-407e-811a-88448966834f', getDiseaseUrl);
+
 
   </script>
   <!-- D3 collipsable tree -->
