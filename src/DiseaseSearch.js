@@ -111,7 +111,7 @@ Openphacts.DiseaseSearch.prototype.diseasesByTarget = function(URI, page, pageSi
     }).done(function(response, status, request) {
         callback.call(this, true, request.status, response.result);
     }).fail(function(response, status, statusText) {
-        callback.call(this, false, response.status);
+        //callback.call(this, false, response.status);
     });
 }
 
