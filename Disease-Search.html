@@ -27,6 +27,12 @@
 	var params = {};
 	for ( var i = 0; i < prmarr.length; i++) {
 		var tmparr = prmarr[i].split("=");
+		if (tmparr[1].split("+").length > 1) {
+		params[tmparr[0]] = tmparr[1].split("+")[0];
+		for ( var j = 1; j < tmparr[1].split("+").length; j++)
+		params[tmparr[0]] += " " + tmparr[1].split("+")[j];
+		}
+		else
 		params[tmparr[0]] = tmparr[1];
 	}
 
@@ -44,7 +50,7 @@
 
 	<!--- Search bar --->
 	<div id="tfheader">
-		<br> This is a search engine where you can ..... <br>
+		<br> Enter name of a disease and to get the possible pathways for that disease. This tool also lists down all the possible diseases that are similar in pathway to the searched disease. You can update the results while the search is still in progress. At the end of the search, the results will update automatically. <br>
 		<form id="tfnewsearch" method="get" action="Disease-Search.html">
 		        <input type="text" class="tftextinput" name="search" size="21" maxlength="120"><input type="submit" value="Search a Disease" class="tfbutton">
 		</form>
