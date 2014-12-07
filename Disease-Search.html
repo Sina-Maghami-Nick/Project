@@ -53,7 +53,8 @@
 
 	<!--- Search bar --->
 	<div id="tfheader">
-		<form id="tfnewsearch" method="get" action="main.1.html">
+		<br> This is a search engine where you can ..... <br>
+		<form id="tfnewsearch" method="get" action="Disease-Search.html">
 		        <input type="text" class="tftextinput" name="search" size="21" maxlength="120"><input type="submit" value="Search a Disease" class="tfbutton">
 		</form>
 	<div class="tfclear"></div>
@@ -103,7 +104,8 @@ var getTargets=function(success, status, response){
 var getPathways = function(success, status, response){
   //checks if there is a response.
   if (status == 200) {
-	// To check the Json //document.writeln("<pre>" + JSON.stringify(response, null, '  ') + "</pre>");    dataJSON = JSON.stringify(response);
+	// To check the Json //document.writeln("<pre>" + JSON.stringify(response, null, '  ') + "</pre>");    
+	dataJSON = JSON.stringify(response);
     data = JSON.parse(unescape(dataJSON));
 	//console.log("item0: " + data.items[0]);
 	////document.getElementById("pathway").innerHTML += "<br><b>" + data.items[0].hasPart.exactMatch.prefLabel_en + "</b></br>";
@@ -158,7 +160,8 @@ var getTargetsofPathways = function(success, status, response){
 //Sixth callback Function diseases from the targets
 var diseaseFromTarget = function(success, status, response){
 	if (status == 200) {
-		// To check the Json //document.writeln("<pre>" + JSON.stringify(response, null, '  ') + "</pre>");		dataJSON = JSON.stringify(response);
+		// To check the Json //document.writeln("<pre>" + JSON.stringify(response, null, '  ') + "</pre>");		
+		dataJSON = JSON.stringify(response);
 		data = JSON.parse(unescape(dataJSON));
 		fatherLink = data.isPartOf._about.split("https://beta.openphacts.org/1.4/disease/byTarget?_format=json&app_key=6992b9c544389ddda346cbb4cec5c6ec&app_id=319894f5&uri=");
 		
